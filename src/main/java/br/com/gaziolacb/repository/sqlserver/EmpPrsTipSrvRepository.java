@@ -1,0 +1,17 @@
+package br.com.gaziolacb.repository.sqlserver;
+
+import br.com.gaziolacb.entities.ofertas.EmpPrsTipSrv;
+import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@ApplicationScoped
+public class EmpPrsTipSrvRepository implements PanacheRepository<EmpPrsTipSrv> {
+
+    public List<EmpPrsTipSrv> findByEventTimestampAfter(LocalDateTime dateTime) {
+        return find("eventTimestamp > ?1", dateTime).list();
+    }
+
+}
