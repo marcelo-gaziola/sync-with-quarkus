@@ -36,6 +36,12 @@ public class OfertaResource {
     }
 
     @GET
+    @Path("/fique-seguro/diario")
+    public List<OfertaConsolidadaDTO> buscarFiqueSegurosDiario() {
+        return ofertaService.buscarFiqueSegurosDiario();
+    }
+
+    @GET
     @Path("/seguros")
     public List<OfertaConsolidadaDTO> buscarOutrosSeguros() {
         return ofertaService.buscarOutrosSeguros();

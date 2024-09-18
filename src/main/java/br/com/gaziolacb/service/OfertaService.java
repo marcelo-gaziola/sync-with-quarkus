@@ -27,6 +27,10 @@ public class OfertaService {
         return ofertaRepository.buscarFiqueSeguros();
     }
 
+    public List<OfertaConsolidadaDTO> buscarFiqueSegurosDiario() {
+        return ofertaRepository.buscarFiqueSegurosDiario();
+    }
+
     public List<OfertaConsolidadaDTO> buscarOutrosSeguros() {
             return ofertaRepository.buscarOutrosSeguros();
     }

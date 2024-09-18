@@ -34,6 +34,13 @@ public class OfertaRepository implements PanacheRepository<OfertaDTO> {
         return buscarOfertas(tipo, joins, whereClause, false);
     }
 
+    public List<OfertaConsolidadaDTO> buscarFiqueSegurosDiario() {
+        String tipo = "SELECT 'FIQUE_SEGURO' AS TIPO, ";
+        String joins = getJoinsFiqueSeguro();
+        String whereClause = "A.CD_EMPGCB = 21 AND A.CD_TIPSRV = 2 AND A.CD_CLFSRV = 8 AND (B.EVENT_TIMESTAMP > '2024-09-16 13:00:00.0000000' OR C.EVENT_TIMESTAMP > '2024-09-16 13:00:00.0000000')";
+        return buscarOfertas(tipo, joins, whereClause, false);
+    }
+
     public List<OfertaConsolidadaDTO> buscarOutrosSeguros() {
         String tipo = "SELECT 'SEGUROS' AS TIPO, ";
         String joins = getJoinsOutrosServicos();
@@ -167,12 +174,14 @@ public class OfertaRepository implements PanacheRepository<OfertaDTO> {
                 "AND B.CD_BND = A.CD_BND " +
                 "AND B.CD_EPSRV = A.CD_EPSRV " +
                 "AND B.CD_SRVCMC = A.CD_CLFSRV " +
+                "AND B.DT_SRVCMC_INI_VIG < CURRENT_DATE " +
                 "AND (B.DT_SRVCMC_FIM_VIG IS NULL OR B.DT_SRVCMC_FIM_VIG >= CURRENT_DATE) " +
                 "AND B.ST_SRVCMC_SRV_PTD != 'M' " +
                 "INNER JOIN FXA_PCO_CMC_SRV C ON C.CD_EMPGCB = B.CD_EMPGCB " +
                 "AND C.CD_BND = B.CD_BND " +
                 "AND C.CD_EPSRV = B.CD_EPSRV " +
                 "AND C.CD_SRVCMC = B.CD_SRVCMC " +
+                "AND C.DT_FPCSRV_INI_VIG < CURRENT_DATE " +
                 "AND (C.DT_FPCSRV_FIM_VIG IS NULL OR C.DT_FPCSRV_FIM_VIG >= CURRENT_DATE)";
         return joins;
     }
@@ -181,12 +190,14 @@ public class OfertaRepository implements PanacheRepository<OfertaDTO> {
         String joins = "INNER JOIN SRV_CMC B ON B.CD_EMPGCB = A.CD_EMPGCB " +
                 "AND B.CD_BND = A.CD_BND " +
                 "AND B.CD_EPSRV = A.CD_EPSRV " +
-                "AND B.DT_SRVCMC_FIM_VIG IS NULL " +
+                "AND B.DT_SRVCMC_INI_VIG < CURRENT_DATE " +
+                "AND (B.DT_SRVCMC_FIM_VIG IS NULL OR B.DT_SRVCMC_FIM_VIG >= CURRENT_DATE) " +
                 "INNER JOIN FXA_PCO_CMC_SRV C ON C.CD_EMPGCB = B.CD_EMPGCB " +
                 "AND C.CD_BND = B.CD_BND " +
                 "AND C.CD_EPSRV = B.CD_EPSRV " +
                 "AND C.CD_SRVCMC = B.CD_SRVCMC " +
-                "AND C.DT_FPCSRV_FIM_VIG IS NULL";
+                "AND C.DT_FPCSRV_INI_VIG < CURRENT_DATE " +
+                "AND (C.DT_FPCSRV_FIM_VIG IS NULL OR C.DT_FPCSRV_FIM_VIG >= CURRENT_DATE)";
         return joins;
     }
 
